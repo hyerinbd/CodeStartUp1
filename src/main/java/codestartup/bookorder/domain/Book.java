@@ -6,6 +6,7 @@ public class Book {
     private String category;
     private int origin_price;
     private int discount_price; // 할인금액
+    // TODO: pay_method가 왜 Boolean인지?
     private Boolean pay_method;  // 결제 방법
     private int pay_amount; // 현금일 경우 지불 금액
     private  int change_amount; // 현금일 경우 거스름돈

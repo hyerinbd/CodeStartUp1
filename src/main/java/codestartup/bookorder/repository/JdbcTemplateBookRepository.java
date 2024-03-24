@@ -18,6 +18,9 @@ public class JdbcTemplateBookRepository implements BookRepository{
 
     @Override
     public List<Book> bookListAll() {
+        // TODO: 3layer에서 뭐가 잘못된걸까?
+        // 책임이 persist로 가버림
+        // DB 부하걸려요
         return jdbcTemplate.query(
                 "select\n" +
                         "  id\n" +

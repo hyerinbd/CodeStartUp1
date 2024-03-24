@@ -1,8 +1,11 @@
 package codestartup.bookorder.controller;
 
 import codestartup.bookorder.domain.Book;
+import codestartup.bookorder.domain.BookResponse;
 import codestartup.bookorder.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,14 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+
+//TODO: 화면 없이 rest api로 변경
+//@Controller
+@RequiredArgsConstructor
+@RestController
 public class BookController {
     private final BookService bookService;
-
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @GetMapping("/")
     public String bookListAll(Model model){
@@ -36,9 +38,19 @@ public class BookController {
         return "book/bookOrderView";
     }
 
+    @GetMapping("/book/sample")
+    public ResponseEntity<List<BookResponse>> sample(){
+        List<BookResponse> result = bookService.findAllBookWithDisount();
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping("/book/bookOrder")
     public String bookOrder(@ModelAttribute Book book, Model model, BindingResult bindingResult) {
 
+        // result = orderService.order(request);
+
+        // TODO: 3layer 아키텍처를 왜 사용하는지? 공부
+        // TODO: controller에 비즈니스 로직이 포함됨. 이를 service로 분리해야함
         // 필수값 체크
         // 1. 결제방식 체크 여부
         if(book.getPay_method() == null){
@@ -52,7 +64,8 @@ public class BookController {
                 bindingResult.addError(new FieldError("book", "pay_amount", "지불금액은 필수 입니다."));
                 return "book/bookOrderView";
             }
-            
+
+            // TODO: 책임 할당 제대로 안된것, 묻지 말고 시켜라
             if(book.getDiscount_price() != 0){  // 할인금액이 존재하는 경우
                 if(book.getPay_amount() < book.getDiscount_price()){
                     bindingResult.addError(new FieldError("book", "pay_amount", "지불금액이 적습니다."));
