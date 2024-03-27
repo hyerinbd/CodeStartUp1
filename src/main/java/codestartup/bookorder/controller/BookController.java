@@ -1,44 +1,37 @@
 package codestartup.bookorder.controller;
 
-import codestartup.bookorder.domain.Book;
+import codestartup.bookorder.domain.BookResponse;
 import codestartup.bookorder.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
-@Controller
+
+//TODO: 화면 없이 rest api로 변경
+//@Controller
+@RequiredArgsConstructor
+@RestController
 public class BookController {
     private final BookService bookService;
 
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
+    @GetMapping("/book/findAllBookWithDiscount")
+    public ResponseEntity<List<BookResponse>> findAllBookWithDiscount(){
+        List<BookResponse> result = bookService.findAllBookWithDiscount();
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/")
-    public String bookListAll(Model model){
-        List<Book> bookListAll = bookService.bookListAll();
-        model.addAttribute("book", bookListAll);
-        return "book/bookList";
-    }
-
-    @GetMapping("/book/bookOrderView")
-    public String bookList(@RequestParam final Long id, Model model){
-        Optional<Book> result = bookService.findBookById(id);
-        Book book = result.get();
-        model.addAttribute("book", book);
-        return "book/bookOrderView";
-    }
-
-    @PostMapping("/book/bookOrder")
+    /*@PostMapping("/book/bookOrder")
     public String bookOrder(@ModelAttribute Book book, Model model, BindingResult bindingResult) {
 
+        // result = orderService.order(request);
+
+        // TODO: 3layer 아키텍처를 왜 사용하는지? 공부
+        // 다른 계층의 역할을 침범하지 않는다.
+        // 각 컴포넌트의 역할이 명확해지므로 코드의 가독성과 기능 구현에 유리하고, 확장성이 좋아진다.
+        // 각 계층이 독립적으로 작성되기 때문에 다른 레이어와의 의존성을 낮춰 단위테스트에 유리하다.
+        // TODO: controller에 비즈니스 로직이 포함됨. 이를 service로 분리해야함
         // 필수값 체크
         // 1. 결제방식 체크 여부
         if(book.getPay_method() == null){
@@ -52,7 +45,8 @@ public class BookController {
                 bindingResult.addError(new FieldError("book", "pay_amount", "지불금액은 필수 입니다."));
                 return "book/bookOrderView";
             }
-            
+
+            // TODO: 책임 할당 제대로 안된것, 묻지 말고 시켜라
             if(book.getDiscount_price() != 0){  // 할인금액이 존재하는 경우
                 if(book.getPay_amount() < book.getDiscount_price()){
                     bindingResult.addError(new FieldError("book", "pay_amount", "지불금액이 적습니다."));
@@ -77,5 +71,5 @@ public class BookController {
         }
         model.addAttribute("book", book);
         return "book/bookOrderView";
-    }
+    }*/
 }

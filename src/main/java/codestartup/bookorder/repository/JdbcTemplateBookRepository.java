@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 public class JdbcTemplateBookRepository implements BookRepository{
 
@@ -18,6 +17,9 @@ public class JdbcTemplateBookRepository implements BookRepository{
 
     @Override
     public List<Book> bookListAll() {
+        // TODO: 3layer에서 뭐가 잘못된걸까?
+        // 책임이 persist로 가버림
+        // DB 부하걸려요
         return jdbcTemplate.query(
                 "select\n" +
                         "  id\n" +
@@ -31,7 +33,7 @@ public class JdbcTemplateBookRepository implements BookRepository{
                         "from book", bookrRowMapper());
     }
 
-    @Override
+    /*@Override
     public Optional<Book> findBookById(long id) {
         List<Book> result = jdbcTemplate.query(
                 "select\n" +
@@ -45,7 +47,7 @@ public class JdbcTemplateBookRepository implements BookRepository{
                         "end , INT) as discount_price\n" +
                         "from book where id = ?", bookrRowMapper(), id);
         return result.stream().findAny();
-    }
+    }*/
 
     private RowMapper<Book> bookrRowMapper(){
         return (rs, rowNum) -> {
@@ -53,8 +55,8 @@ public class JdbcTemplateBookRepository implements BookRepository{
             book.setId((int) rs.getLong("id"));
             book.setName(rs.getString("name"));
             book.setCategory(rs.getString("category"));
-            book.setOrigin_price(rs.getInt("origin_price"));
-            book.setDiscount_price(rs.getInt("discount_price"));
+            //book.setOrigin_price(rs.getInt("origin_price"));
+            //book.setDiscount_price(rs.getInt("discount_price"));
             return book;
         };
     }
