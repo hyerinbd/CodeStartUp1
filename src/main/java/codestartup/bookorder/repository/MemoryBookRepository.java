@@ -1,6 +1,7 @@
 package codestartup.bookorder.repository;
 
 import codestartup.bookorder.domain.Book;
+import codestartup.bookorder.domain.BookResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -28,8 +29,18 @@ public class MemoryBookRepository implements BookRepository{
         return new ArrayList<>(bookStore.values());
     }
 
-    /*@Override
-    public Optional<Book> findBookById(long id) {
-        return Optional.empty();
-    }*/
+    /*
+    * id로 도서 조회
+    * */
+    @Override
+    public BookResponse findBookById(List<BookResponse> book, int id) {
+        BookResponse result = null;
+        for(BookResponse resultBookList : book){
+            if(id == resultBookList.getId()){
+                result = resultBookList;
+            }
+        }
+        return result;
+    }
+
 }

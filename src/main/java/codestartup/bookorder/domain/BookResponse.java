@@ -14,13 +14,13 @@ public class BookResponse {
     private String name;
     private String category;
     private int origind_price;
-    private List<DiscountDtailes> discountDetailesList;
+    private DiscountDtailes discountDetailes;
 
-    public BookResponse(int id, String name, String category, int price, List<DiscountDtailes> discountDetailesList) {
+    public BookResponse(int id, String name, String category, int price, DiscountDtailes discountDetailes) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.origind_price = price;
-        this.discountDetailesList = discountDetailesList;
+        this.discountDetailes = discountDetailes;
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class JdbcTemplateBookRepository implements BookRepository{
+public class JdbcTemplateBookRepository /*implements BookRepository*/{
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -15,7 +15,7 @@ public class JdbcTemplateBookRepository implements BookRepository{
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
+    /*@Override
     public List<Book> bookListAll() {
         // TODO: 3layer에서 뭐가 잘못된걸까?
         // 책임이 persist로 가버림
@@ -31,7 +31,7 @@ public class JdbcTemplateBookRepository implements BookRepository{
                         "  else 0 \n" +
                         "end , INT) as discount_price\n" +
                         "from book", bookrRowMapper());
-    }
+    }*/
 
     /*@Override
     public Optional<Book> findBookById(long id) {

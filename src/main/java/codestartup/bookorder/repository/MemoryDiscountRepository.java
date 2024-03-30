@@ -13,17 +13,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemoryDiscountRepository implements DiscountRepository {
 
+    // TODO: 별도의 repo가 있는 걸로 변경
+    private List<DiscountPolicy> discountPolicies = List.of(
+            new ItCategoryDiscountPolicy(),
+            new EcoCategoryDiscountPolicy()
+    );
+
     public List<BookResponse> applyDiscountList(List<Book> books) {
         List<BookResponse> responseList = new ArrayList<>();
         for(int i=0;i<books.size();i++){
+            String category = books.get(i).getCategory();
             responseList.add(i
                     , new BookResponse(books.get(i).getId(), books.get(i).getName(), books.get(i).getCategory(), books.get(i).getPrice()
-                            , new ArrayList<DiscountDtailes>()));
+                            , new DiscountDtailes(dateDiscount(category), categoryDiscount(category), 0)));
         }
 
-        for(int i=0;i<responseList.size();i++){
-            String category = responseList.get(i).getCategory();
-            responseList.get(i).setDiscountDetailesList(Collections.singletonList(new DiscountDtailes(dateDiscount(category), categoryDiscount(category), 0)));
+        for(BookResponse bookResponse : responseList){
+            for(DiscountPolicy discountPolicy : discountPolicies){
+                if(discountPolicy.isDiscountable(bookResponse) == true){    // 할인 적용 여부
+                    bookResponse.getDiscountDetailes().setDiscount(bookResponse.getOrigind_price() - discountPolicy.getDiscount(bookResponse)); // 할인금액 셋팅
+                }else{
+                    bookResponse.getDiscountDetailes().setDiscount(0);
+                }
+            }
         }
 
         return responseList;

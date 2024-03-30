@@ -1,12 +1,16 @@
 package codestartup.bookorder.controller;
 
+import codestartup.bookorder.domain.Book;
+import codestartup.bookorder.domain.BookOrderResponse;
 import codestartup.bookorder.domain.BookResponse;
+import codestartup.bookorder.service.BookOrderService;
 import codestartup.bookorder.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 //TODO: 화면 없이 rest api로 변경
@@ -15,8 +19,12 @@ import java.util.List;
 @RestController
 public class BookController {
     private final BookService bookService;
+    private final BookOrderService bookOrderService;
 
-    @GetMapping("/book/findAllBookWithDiscount")
+    /*
+    * 도서주문 전체 목록
+    * */
+    @GetMapping("/book/findAllBookWithDiscountList")
     public ResponseEntity<List<BookResponse>> findAllBookWithDiscount(){
         List<BookResponse> result = bookService.findAllBookWithDiscount();
         return ResponseEntity.ok(result);
@@ -72,4 +80,34 @@ public class BookController {
         model.addAttribute("book", book);
         return "book/bookOrderView";
     }*/
+
+    /*
+    * 도서주문 상세 목록
+    * */
+    @GetMapping("/book/bookOrderList")
+    public BookResponse bookOrderList(@RequestParam final int id){
+        List<BookResponse> bookList = (List<BookResponse>) findAllBookWithDiscount();
+        BookResponse result = bookService.findBookListById(bookList, id);
+        return ResponseEntity.ok(result).getBody();
+    }
+
+    /*
+    * 도서주문
+    * */
+    @PostMapping("/book/bookOrder")
+    public BookOrderResponse bookOrder(@RequestParam BookResponse bookResponse, String pay_method, int id, int pay_amount){
+
+        // 결제방식, id 필수
+        if((pay_method == "" || pay_method == null) || id == 0){
+            return (BookOrderResponse) ResponseEntity.badRequest();
+        }
+
+        // 결제방식 현금일 경우 필수
+        if(pay_method == "CASH" && pay_amount == 0){
+            return (BookOrderResponse) ResponseEntity.badRequest();
+        }
+
+        BookOrderResponse result = bookOrderService.bookOrderResponse(bookResponse, pay_method, id, pay_amount);
+        return ResponseEntity.ok(result).getBody();
+    }
 }

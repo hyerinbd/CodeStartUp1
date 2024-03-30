@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 // TODO: 스프링에서 bean 주입방법에 대해 알아보기
 @Service
@@ -15,30 +16,19 @@ public class BookService {
     private final BookRepository bookRepository;
     private final DiscountService discountService;
 
-    public List<BookResponse> findAllBookWithDiscount(){
-
+    public List<BookResponse> findAllBookWithDiscount() {
         // 전체 도서 조회
         List<Book> books = bookRepository.bookListAll();
-
-        //
-        //discountService.applyDiscount(bookRepository.bookListAll());
-
-        discountService.applyDiscountList(books);
-
-        return null;
+        // 할인 정보 포람 조회
+        List<BookResponse> resultList = discountService.applyDiscountList(books);
+        return resultList;
     }
 
     /*
-   * 전체 도서 조회
-   * */
-    /*public List<Book> bookListAll(){
-        return bookRepository.bookListAll();
+    * id로 도서 조회
+    * */
+    public BookResponse findBookListById(List<BookResponse> book, int id) {
+        BookResponse resultList = bookRepository.findBookById(book, id);
+        return resultList;
     }
-*/
-    /*
-     * 도서 주문 상세 화면
-     * */
-    /*public Optional<Book> findBookById(long id){
-        return bookRepository.findBookById(id);
-    }*/
 }

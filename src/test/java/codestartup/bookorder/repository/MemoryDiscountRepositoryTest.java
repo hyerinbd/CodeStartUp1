@@ -24,27 +24,18 @@ public class MemoryDiscountRepositoryTest {
         List<BookResponse> responseList = new ArrayList<>();
         List<Book> bookList = new ArrayList<>(bookStore.values());
         for(int i=0;i<bookList.size();i++){
+            String category = bookList.get(i).getCategory();
             responseList.add(i
                         , new BookResponse(bookList.get(i).getId(), bookList.get(i).getName(), bookList.get(i).getCategory(), bookList.get(i).getPrice()
-                            , new ArrayList<DiscountDtailes>()));
-        }
-
-        for(int i=0;i<responseList.size();i++){
-            String category = responseList.get(i).getCategory();
-            responseList.get(i).setDiscountDetailesList(Collections.singletonList(new DiscountDtailes(dateDiscount(category), categoryDiscount(category), 0)));
+                            , new DiscountDtailes(dateDiscount(category), categoryDiscount(category), 0)));
         }
 
         for(BookResponse bookResponse : responseList){
             for(DiscountPolicy discountPolicy1 : discountPolicyList){
-                if(discountPolicy1.isDiscountable(bookResponse) == true){
-
-                    bookResponse.getDiscountDetailesList().stream().forEach(discountDtailes -> {
-                        discountDtailes.setDiscount(bookResponse.getOrigind_price() - discountPolicy1.getDiscount(bookResponse));
-                    });
+                if(discountPolicy1.isDiscountable(bookResponse) == true){    // 할인 적용 여부
+                    bookResponse.getDiscountDetailes().setDiscount(bookResponse.getOrigind_price() - discountPolicy1.getDiscount(bookResponse)); // 할인금액 셋팅
                 }else{
-                    bookResponse.getDiscountDetailesList().stream().forEach(discountDtailes -> {
-                        discountDtailes.setDiscount(0);
-                    });
+                    bookResponse.getDiscountDetailes().setDiscount(0);
                 }
 
             }
