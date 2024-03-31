@@ -15,6 +15,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemoryBookOrderRepository implements BookOrderRepository{
 
+
+    // TODO: service로 이동
     @Override
     public BookOrderResponse bookOrder(BookResponse bookResponse, String pay_method, int id, int pay_amount) {
         BookOrderResponse resultList = new BookOrderResponse();

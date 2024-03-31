@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemoryDiscountRepository implements DiscountRepository {
 
-    // TODO: 별도의 repo가 있는 걸로 변경
+    // TODO: service로 이동
     private List<DiscountPolicy> discountPolicies = List.of(
             new ItCategoryDiscountPolicy(),
             new EcoCategoryDiscountPolicy()
@@ -52,6 +52,7 @@ public class MemoryDiscountRepository implements DiscountRepository {
     private String dateDiscount(String category) {
         String discountDay = "";
 
+        // TODO: 테스트 할 수 있는 코드로 변경해보기
         LocalDate now = LocalDate.now();    // 현재 날짜
         int dayOfWeekValue = now.getDayOfWeek().getValue(); // 현재 요일
 

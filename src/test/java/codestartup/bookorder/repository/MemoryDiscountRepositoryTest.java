@@ -32,7 +32,7 @@ public class MemoryDiscountRepositoryTest {
 
         for(BookResponse bookResponse : responseList){
             for(DiscountPolicy discountPolicy1 : discountPolicyList){
-                if(discountPolicy1.isDiscountable(bookResponse) == true){    // 할인 적용 여부
+                if(discountPolicy1.isDiscountable(bookResponse)){    // 할인 적용 여부
                     bookResponse.getDiscountDetailes().setDiscount(bookResponse.getOrigind_price() - discountPolicy1.getDiscount(bookResponse)); // 할인금액 셋팅
                 }else{
                     bookResponse.getDiscountDetailes().setDiscount(0);
