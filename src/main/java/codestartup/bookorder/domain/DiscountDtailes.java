@@ -1,10 +1,12 @@
 package codestartup.bookorder.domain;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 // 할인 내용
 public class DiscountDtailes {
     private String discount_Day;

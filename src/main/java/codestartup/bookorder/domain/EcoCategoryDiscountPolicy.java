@@ -1,21 +1,20 @@
 package codestartup.bookorder.domain;
 
-public class EcoCategoryDiscountPolicy implements DiscountPolicy{
+public class EcoCategoryDiscountPolicy{
 
     private static final int DISCOUNT_PRICE = 1500;
 
-    @Override
-    public boolean isDiscountable(BookResponse book) {
-        String category = book.getCategory();
+    public DiscountPolicy isDiscountable(DiscountPolicy discountPolicy) {
+        String category = discountPolicy.getCategory();
+
         if(category.equals("교양")){
-            return true;
+            discountPolicy.setDiscountable(true);
         }
-        return false;
+        return discountPolicy;
     }
 
-
-    public int getDiscount(BookResponse book) {
-        return DISCOUNT_PRICE;
+    public int getDiscount(int price) {
+        return price - DISCOUNT_PRICE;
     }
 
 }

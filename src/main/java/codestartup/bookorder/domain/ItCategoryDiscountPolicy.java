@@ -1,27 +1,20 @@
 package codestartup.bookorder.domain;
 
-import java.time.LocalDate;
-
-public class ItCategoryDiscountPolicy implements DiscountPolicy{
+public class ItCategoryDiscountPolicy{
 
     private static final int DISCOUNT_PERCENT = 10;
 
-    @Override
-    public boolean isDiscountable(BookResponse book) {
-        String category = book.getCategory();
-        String discountDay = "";
+    public DiscountPolicy isDiscountable(DiscountPolicy discountPolicy) {
+        String category = discountPolicy.getCategory();
 
-        LocalDate now = LocalDate.now();    // 현재 날짜
-        int dayOfWeekValue = now.getDayOfWeek().getValue(); // 현재 요일
-
-        if(category.equals("개발") && dayOfWeekValue == 5){
-            return true;
+        if(category.equals("개발")){
+            discountPolicy.setDiscountable(true);
         }
-        return false;
+        return discountPolicy;
     }
 
-    @Override
-    public int getDiscount(BookResponse book) {
-        return book.getOrigind_price() * (DISCOUNT_PERCENT/100);
+    public int getDiscount(int price) {
+        return price * (DISCOUNT_PERCENT/100);
     }
+
 }

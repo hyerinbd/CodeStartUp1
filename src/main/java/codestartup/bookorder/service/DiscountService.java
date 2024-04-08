@@ -1,50 +1,60 @@
 package codestartup.bookorder.service;
 
 import codestartup.bookorder.domain.*;
-import codestartup.bookorder.repository.DiscountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DiscountService {
-    private final DiscountRepository discountRepository;
+    private final FridayDiscountPolicy fridayDiscountPolicy;
+    private final ItCategoryDiscountPolicy itCategoryDiscountPolicy;
+    private final EcoCategoryDiscountPolicy ecoCategoryDiscountPolicy;
     private final DiscountPolicy discountPolicy;
 
-            public List<BookResponse> applyDiscountList(List<Book> books){
-            //TODO: OCP open closed principle 공부해보기
-            // 변경이 발생해도 기본 구조는 수정되지 않고
-            // 다른 기능들도 쉽게 추가해서 사용 가능하도록
-            /*for (Book book : books) {
-                dateDiscount(book);
-                //categoryDiscount();
-            }*/
+    public List<BookResponse> applyDiscountList(List<Book> books){
 
-            List<BookResponse> bookResponseList = discountRepository.applyDiscountList(books);
+        List<BookResponse> bookResponseList = new ArrayList<>();
+        for(int i=0;i<books.size();i++){
+            bookResponseList.add(i,
+                    new BookResponse(books.get(i).getId(), books.get(i).getName(), books.get(i).getCategory(), books.get(i).getPrice(),
+                            new DiscountDtailes()));
+        }
 
-            //TODO: 구현
-            /*int sum = 0;
-            for(DiscountPolicy discountPolicy : discountPolicies){
-                if(discountPolicy.isDiscountable(book)){
-                    int discount = discountPolicy.getDiscount(book);
-                    sum += discount;
-                }
+        //TODO: 구현
+        for(int i=0;i<bookResponseList.size();i++){
+            String category = bookResponseList.get(i).getCategory();
+            int price = bookResponseList.get(i).getOrigind_price();
+
+            int ordert_y = 2024;
+            int ordert_m = 4;
+            int ordert_d = 5;
+
+            discountPolicy.setOrder_y(ordert_y);
+            discountPolicy.setOrder_m(ordert_m);
+            discountPolicy.setOrder_d(ordert_d);
+
+            discountPolicy.setCategory(category);
+
+            DiscountPolicy returnFridayPolicy = fridayDiscountPolicy.isDiscountable(discountPolicy);
+            DiscountPolicy returnItPolicy = itCategoryDiscountPolicy.isDiscountable(discountPolicy);
+            DiscountPolicy returnEcoPolicy = ecoCategoryDiscountPolicy.isDiscountable(discountPolicy);
+
+            if(returnFridayPolicy.isDiscountable() && returnItPolicy.isDiscountable()) {
+                bookResponseList.get(i).getDiscountDetailes().setDiscount_Day(returnFridayPolicy.getDiscount_day());
+                bookResponseList.get(i).getDiscountDetailes().setDiscount_category(category);
+                bookResponseList.get(i).getDiscountDetailes().setDiscount(itCategoryDiscountPolicy.getDiscount(price));
+            }else if(returnEcoPolicy.isDiscountable()){
+                bookResponseList.get(i).getDiscountDetailes().setDiscount_Day(returnEcoPolicy.getDiscount_day());
+                bookResponseList.get(i).getDiscountDetailes().setDiscount_category(category);
+                bookResponseList.get(i).getDiscountDetailes().setDiscount(ecoCategoryDiscountPolicy.getDiscount(price));
             }
-            book.setDiscountPrice(sum);*/
 
-            return bookResponseList;
         }
 
-        /*private void categoryDiscount(){
-            // it = 1
-            // 재테크 = 4
-        }
-
-        private void dateDiscount(Book book){
-            LocalDate now = LocalDate.now();    // 현재 날짜
-            int dayOfWeekValue = now.getDayOfWeek().getValue();
-            System.out.println("dayOfWeekValue : " + dayOfWeekValue);
-        }*/
+        return bookResponseList;
+    }
 }

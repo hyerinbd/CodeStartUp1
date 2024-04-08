@@ -1,28 +1,19 @@
 package codestartup.bookorder.domain;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-
 // TODO: 구현
-public class FridayDiscountPolicy implements DiscountPolicy{
+public class FridayDiscountPolicy{
 
-
-    @Override
-    public boolean isDiscountable(BookResponse book) {
-        String category = book.getCategory();
-        String discountDay = "";
-
-        LocalDate now = LocalDate.now();    // 현재 날짜
-        int dayOfWeekValue = now.getDayOfWeek().getValue(); // 현재 요일
-
-        if(category.equals("개발") && dayOfWeekValue == 5){
-            return true;
+    public DiscountPolicy isDiscountable(DiscountPolicy discountPolicy) {
+        String day = "";
+        LocalDate date = LocalDate.of(discountPolicy.getOrder_y(), discountPolicy.getOrder_m(), discountPolicy.getOrder_d());
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        if (dayOfWeek.getValue() == 5) {
+            discountPolicy.setDiscountable(true);
+            discountPolicy.setDiscount_day("금요일");
         }
-        return false;
-    }
-
-    @Override
-    public int getDiscount(BookResponse book) {
-        return book.getOrigind_price() * (DISCOUNT_PERCENT/100);
+        return discountPolicy;
     }
 }
