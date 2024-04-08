@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-//TODO: 화면 없이 rest api로 변경
 @RequiredArgsConstructor
 @RestController
 public class BookController {
@@ -37,18 +36,18 @@ public class BookController {
     * */
     @PostMapping("/book/order")
     public BookOrderResponseDto bookOrder(
-            // TODO: request DTO로 변경
-            //  변경
-            //  검증 등
-            // TODO:  @RequestBody 사용해보기
             @Validated @RequestBody BookOrderRequestDto request
-    ) throws Exception {
-        try {
-            // 생성자 or 함수
-            new BookOrderRequestDto(request.getId(), request.getPay_method(), request.getPay_amount(), request.getOrigin_price(), request.getDiscount_price());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    ) {
+//        try {
+//            // 생성자 or 함수
+////            request.validate();
+//            new BookOrderRequestDto(request.getId(), request.getPay_method(), request.getPay_amount(), request.getOrigin_price(), request.getDiscount_price());
+//        } catch (Exception e) {
+//            // TODO: 검증
+//            // TODO: ExceptionHandler 사용해보기, Spring에서 어떻게 예외를 처리하는 지.. 여러 방법이 있는데 장단
+//            return ResponseEntity.badRequest(response).getBody();
+//        }
+        new BookOrderRequestDto(request.getId(), request.getPay_method(), request.getPay_amount(), request.getOrigin_price(), request.getDiscount_price());
 
         BookOrderResponseDto response = bookOrderService.bookOrderResponse(request);
         return ResponseEntity.ok(response).getBody();

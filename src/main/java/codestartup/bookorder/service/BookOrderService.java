@@ -24,8 +24,8 @@ public class BookOrderService {
         bookOrderResponseDto.setPay_amount(pay_amount);
 
         // 현금일 경우만 거스름돈 계산
+        // card api
         if(pay_method == "CASH"){
-
             if(discount_price != 0){
                 pay = discount_price;
             }else{

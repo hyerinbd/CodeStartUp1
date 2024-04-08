@@ -10,13 +10,13 @@ public class BookResponse {
     private String name;
     private String category;
     private int origind_price;
-    private DiscountDtailes discountDetailes;
+    private int discount_price;
 
-    public BookResponse(int id, String name, String category, int price, DiscountDtailes discountDetailes) {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.origind_price = price;
-        this.discountDetailes = discountDetailes;
+    public BookResponse(Book book, int discount_price) {
+        this.id = book.getId();
+        this.name = book.getName();
+        this.category = book.getCategory();
+        this.origind_price = book.getPrice();
+        this.discount_price = discount_price;
     }
 }
